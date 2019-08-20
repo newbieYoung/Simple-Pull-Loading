@@ -42,6 +42,8 @@
    * $inner 内层容器
    * $list  滚动列表
    * loadingFunc 加载数据回调
+   * resultDelay 显示结果时长
+   * resultDuration 结果消失动画时长
    */
   function SimplePullLoading(config) {
     if (!config || typeof config !== 'object') {
@@ -55,6 +57,9 @@
     this.type = config.type || 'down';
     this.backgroundColor = config.backgroundColor;
     this.loadingFunc = config.loadingFunc || function () {};
+    this.resultDelay = config.resultDelay || 500;
+    this.resultDuration = config.resultDuration || .2;
+
 
     this._isLoading = false; //是否在加载
     this._isStart = false; //是否启动过组件
@@ -235,10 +240,13 @@
     self.$pull.classList.remove(this._tipClass)
     self.$pull.classList.remove(this._loadingClass)
     self.$pull.classList.add(this._successClass)
-    self.$pull.style[transitionDurationPro] = '.2s';
-    self.$list.style[transitionDurationPro] = '.2s';
-    self._moveY = 0;
-    self.moving();
+
+    setTimeout(function () {
+      self.$pull.style[transitionDurationPro] = self.resultDuration + 's';
+      self.$list.style[transitionDurationPro] = self.resultDuration + 's';
+      self._moveY = 0;
+      self.moving();
+    }, self.resultDelay)
 
     self.$pull.addEventListener(transitionEndEvent, function () {
       self.hidePull();
