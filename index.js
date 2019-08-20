@@ -57,6 +57,7 @@
     this.loadingFunc = config.loadingFunc || function () {};
 
     this._isLoading = false; //是否在加载
+    this._isStart = false; //是否启动过组件
 
     this.default();
     this.event();
@@ -110,10 +111,19 @@
   SimplePullLoading.prototype.event = function () {
     var self = this;
 
+    var touchStart;
+    self.$list.addEventListener('touchstart', function (e) {
+      var point = e.touches[0];
+      touchStart = {
+        x: point.clintX,
+        y: point.clientY
+      };
+    })
+
     var movePoint;
     self.$list.addEventListener('touchmove', function (e) {
-      if (!self._isLoading && ((self.type == 'down' && self.atTop() || (self.type == 'up' && self.atBottom())))) {
-        var point = e.touches[0];
+      var point = e.touches[0];
+      if (!self._isLoading && ((self.type == 'down' && self.atTop() && point.clientY > touchStart.y) || (self.type == 'up' && self.atBottom() && point.clientY < touchStart.y))) {
         if (!movePoint) {
           movePoint = {
             x: point.clintX,
@@ -143,7 +153,7 @@
     })
 
     self.$list.addEventListener('touchend', function () {
-      if (!self._isLoading) {
+      if (!self._isLoading && self._isStart) {
         if (Math.abs(self._moveY) > self._loadingMinHeight) {
           self._isLoading = true;
           switch (self.type) {
@@ -239,11 +249,13 @@
     this.$pull.style.display = this._pullDisplay;
     //禁止滚动
     this.$inner.style.overflowY = 'hidden';
+    this._isStart = true;
   }
 
   //隐藏拉动刷新组件
   SimplePullLoading.prototype.hidePull = function () {
     this._isLoading = false;
+    this._isStart = false;
     this._moveY = 0;
     this.$pull.style.display = 'none';
     this.$inner.style.overflowY = 'scroll';
