@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <meta name=viewport
+    content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">
+  <link rel="stylesheet" href="./reset.css">
+  <link rel="stylesheet" href="./pull-loading.css">
+  <style>
+    .outer {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+      overflow-y: hidden;
+    }
+
+    .inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      z-index: 10;
+      overflow-y: scroll;
+    }
+
+    ul {
+      width: 100%;
+    }
+
+    ul li {
+      width: 100%;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #000;
+      background-color: lightgray;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="outer">
+    <div class="sim-pull-loading">
+      <div class="pull-tip">下拉刷新</div>
+      <div class="pull-loading">正在加载</div>
+      <div class="pull-success">刷新成功</div>
+    </div>
+    <div class="inner">
+      <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+        <li>11</li>
+        <li>12</li>
+        <li>13</li>
+      </ul>
+    </div>
+    <div style="position: absolute;bottom:0;width:100%;height:50px;background-color:gray;"></div>
+  </div>
+
+
+  <script src="./lib/prefix-umd.js"></script>
+  <script src="./index.js"></script>
+  <script>
+    window.onload = function () {
+      var $outer = document.querySelector('.outer');
+      var $inner = document.querySelector('.inner');
+      var $list = document.querySelector('.inner ul');
+      var $tip = document.querySelector('.sim-pull-loading .pull-tip');
+      var $loading = document.querySelector('.sim-pull-loading .pull-loading');
+
+
+      $list._moveY = 0;
+      $list._maxMoveY = 100;
+      $list._pullMinHeight = 20;
+      $list._loadingMinHeight = 60;
+
+      var movePoint;
+      $list.addEventListener('touchmove', function (e) {
+        e.preventDefault();
+        var point = e.touches[0];
+        if (!movePoint) {
+          movePoint = {
+            x: point.clintX,
+            y: point.clientY
+          };
+        } else {
+          var moveY = point.clientY - movePoint.y;
+          if (moveY > 0) { //下拉刷新
+            $list._moveY += moveY * ($list._maxMoveY - $list._moveY) / $list
+              ._maxMoveY;
+            $list.style.transform = 'translateY(' + $list._moveY + 'px)';
+          }
+
+          if ($list._moveY >= $list._pullMinHeight) {
+            $tip.style.display = 'flex';
+            $tip.style.height = $list._moveY + 'px';
+          }
+
+          if ($list._moveY >= $list._loadingMinHeight) {
+            $tip.style.display = 'none';
+            $tip.style.height = $list._pullMinHeight + 'px';
+            $loading.style.display = 'flex';
+            $loading.style.height = $list._moveY + 'px';
+          }
+
+          movePoint.x = point.clientX;
+          movePoint.y = point.clientY;
+        }
+      })
+
+      $list.addEventListener('touchend', function () {
+        console.log('touchend');
+        if ($list._moveY >= $list._loadingMinHeight) {
+          $list._moveY = $list._loadingMinHeight;
+          $loading.style.height = $list._moveY + 'px';
+          $list.style.transform = 'translateY(' + $list._moveY + 'px)';
+        } else {
+          $list._moveY = 0;
+          $list.style.transform = 'translateY(' + $list._moveY + 'px)';
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>

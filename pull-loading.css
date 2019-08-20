@@ -2,15 +2,11 @@
     width: 100%;
     position: absolute;
     min-height: 20px;
-    top: 0;
     left: 0;
     right: 0;
     font-size: 12px;
     color: #fff;
-    background-color: #8f82e7;
 }
-
-
 
 /* tip */
 .sim-pull-loading .pull-tip {
