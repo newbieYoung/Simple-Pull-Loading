@@ -64,6 +64,7 @@
     html += '<div class="pull-success">刷新成功</div>'
 
     this.$pull.innerHTML = html;
+    this.$pull.style.display = 'none'; //刚开始隐藏
     this.$outer.appendChild(this.$pull);
 
     switch (this.type) {
@@ -80,7 +81,59 @@
 
   //事件监听
   SimplePullLoading.prototype.event = function () {
+    var self = this;
+    var movePoint;
+    self.$list.addEventListener('touchmove', function (e) {
+      e.preventDefault();
+      var point = e.touches[0];
+      if (!movePoint) {
+        movePoint = {
+          x: point.clintX,
+          y: point.clientY
+        };
+        self.$pull.style.display = 'block'; //显示
+      } else {
+        var moveY = point.clientY - movePoint.y;
 
+        if (self.type == 'down' && moveY > 0) { //下拉刷新
+          self._moveY += moveY * (self._maxMoveY - self._moveY) / self
+            ._maxMoveY;
+          self.$list.style.transform = 'translateY(' + self._moveY + 'px)';
+        }
+
+        if (self._moveY >= self._pullMinHeight) {
+          self.showTip();
+        }
+
+        if (self._moveY >= self._loadingMinHeight) {
+          self.showLoading();
+        }
+
+        movePoint.x = point.clientX;
+        movePoint.y = point.clientY;
+      }
+    })
+  }
+
+  //显示提示
+  SimplePullLoading.prototype.showTip = function () {
+    this.$pull.classList.remove(this._successClass)
+    this.$pull.classList.remove(this._loadingClass)
+    this.$pull.classList.add(this._tipClass)
+  }
+
+  //显示加载动画
+  SimplePullLoading.prototype.showLoading = function () {
+    this.$pull.classList.remove(this._successClass)
+    this.$pull.classList.remove(this._tipClass)
+    this.$pull.classList.add(this._loadingClass)
+  }
+
+  //显示成功
+  SimplePullLoading.prototype.showSuccess = function () {
+    this.$pull.classList.remove(this._tipClass)
+    this.$pull.classList.remove(this._loadingClass)
+    this.$pull.classList.add(this._successClass)
   }
 
   return SimplePullLoading

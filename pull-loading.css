@@ -1,7 +1,9 @@
 .sim-pull-loading {
     width: 100%;
     position: absolute;
-    min-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     left: 0;
     right: 0;
     font-size: 12px;
@@ -11,7 +13,7 @@
 /* tip */
 .sim-pull-loading .pull-tip {
     width: 100%;
-    min-height: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -36,7 +38,7 @@
 /* success */
 .sim-pull-loading .pull-success {
     width: 100%;
-    min-height: 60px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -61,7 +63,7 @@
 /* loading */
 .sim-pull-loading .pull-loading {
     width: 100%;
-    min-height: 60px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
