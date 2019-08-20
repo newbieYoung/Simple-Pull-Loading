@@ -68,7 +68,6 @@
      * 20-60 tip
      * 60-100 loading、success 
      */
-    this._scrollTop = 0;
     this._moveY = 0;
     this._maxMoveY = 100;
     this._pullMinHeight = 20;
@@ -113,7 +112,7 @@
 
     var movePoint;
     self.$list.addEventListener('touchmove', function (e) {
-      if (!self._isLoading) {
+      if (!self._isLoading && ((self.type == 'down' && self.atTop() || (self.type == 'up' && self.atBottom())))) {
         var point = e.touches[0];
         if (!movePoint) {
           movePoint = {
@@ -124,17 +123,16 @@
         } else {
           var moveY = point.clientY - movePoint.y;
 
-          if (self.type == 'down' && moveY > 0) { //下拉刷新
-            self._moveY += moveY * (self._maxMoveY - self._moveY) / self
-              ._maxMoveY;
-            self.moving();
-          }
+          self._moveY += moveY * (self._maxMoveY - Math.abs(self._moveY)) / self
+            ._maxMoveY;
 
-          if (self._moveY >= self._pullMinHeight) {
+          self.moving();
+
+          if (Math.abs(self._moveY) >= self._pullMinHeight) {
             self.showTip();
           }
 
-          if (self._moveY >= self._loadingMinHeight) {
+          if (Math.abs(self._moveY) >= self._loadingMinHeight) {
             self.showLoosen();
           }
 
@@ -145,23 +143,54 @@
     })
 
     self.$list.addEventListener('touchend', function () {
-      if (self._moveY > self._loadingMinHeight) {
-        self._isLoading = true;
-        self._moveY = self._loadingMinHeight;
-        self.showLoading();
-        self.loadingFunc();
-        self.moving()
-      } else {
-        self.hidePull();
+      if (!self._isLoading) {
+        if (Math.abs(self._moveY) > self._loadingMinHeight) {
+          self._isLoading = true;
+          switch (self.type) {
+            case 'down':
+              self._moveY = self._loadingMinHeight;
+              break;
+            case 'up':
+              self._moveY = -self._loadingMinHeight;
+              break;
+            default:
+              break;
+          }
+          self.showLoading();
+          self.loadingFunc();
+          self.moving()
+        } else {
+          self.hidePull();
+        }
+        movePoint = null;
       }
-      movePoint = null;
     })
+  }
+
+  //到达顶部
+  SimplePullLoading.prototype.atTop = function () {
+    var result = false;
+    if (this.$inner.scrollTop <= 1) {
+      this.$inner.scrollTop == 1;
+      result = true;
+    }
+    return result;
+  }
+
+  //到达底部
+  SimplePullLoading.prototype.atBottom = function () {
+    var result = false;
+    if (this.$inner.scrollTop + this.$inner.clientHeight >= this.$inner.scrollHeight - 1) {
+      this.$inner.scrollTop = this.$inner.scrollHeight - this.$inner.clientHeight - 1;
+      result = true;
+    }
+    return result;
   }
 
   //移动
   SimplePullLoading.prototype.moving = function () {
-    this.$list.style[transformProperty] = 'translateY(' + (this._moveY + this._scrollTop) + 'px)';
-    this.$pull.style.height = this._moveY + 'px';
+    this.$list.style[transformProperty] = 'translateY(' + this._moveY + 'px)';
+    this.$pull.style.height = Math.abs(this._moveY) + 'px';
   }
 
   //显示提示
@@ -208,9 +237,8 @@
   //显示拉动刷新组件
   SimplePullLoading.prototype.showPull = function () {
     this.$pull.style.display = this._pullDisplay;
-    this._scrollTop = this.$inner.scrollTop;
+    //禁止滚动
     this.$inner.style.overflowY = 'hidden';
-    this.$list.style[transformProperty] = 'translateY(-' + this._scrollTop + 'px)';
   }
 
   //隐藏拉动刷新组件
@@ -218,12 +246,23 @@
     this._isLoading = false;
     this._moveY = 0;
     this.$pull.style.display = 'none';
+    this.$inner.style.overflowY = 'scroll';
     this.$pull.style[transitionDurationPro] = '0s';
     this.$list.style[transitionDurationPro] = '0s';
     this.$pull.classList.remove(this._loosenClass)
     this.$pull.classList.remove(this._successClass)
     this.$pull.classList.remove(this._tipClass)
     this.$pull.classList.remove(this._loadingClass)
+    switch (this.type) {
+      case 'down':
+        this.$inner.scrollTop = 1;
+        break;
+      case 'up':
+        this.$inner.scrollTop = this.$inner.scrollTop - 1;
+        break;
+      default:
+        break;
+    }
     this.moving();
   }
 

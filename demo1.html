@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>示例一</title>
+  <meta name=viewport
+    content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">
+  <link rel="stylesheet" href="./reset.css">
+  <link rel="stylesheet" href="./pull-loading.css">
+  <style>
+    .outer {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+      overflow-y: hidden;
+      background-color: #8f82e7;
+    }
+
+    .inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      z-index: 10;
+      overflow-y: scroll;
+    }
+
+    .list {
+      width: 100%;
+      transition-property: transform;
+      transition-timing-function: linear;
+    }
+
+    .list li {
+      width: 100%;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #000;
+      background-color: lightgray;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="outer">
+    <div class="inner">
+      <ul class="list">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+        <li>11</li>
+        <li>12</li>
+        <li>13</li>
+      </ul>
+    </div>
+  </div>
+
+
+  <script src="./lib/prefix-umd.js"></script>
+  <script src="./index.js"></script>
+  <script>
+    window.onload = function () {
+      var $outer = document.querySelector('.outer');
+      var $inner = document.querySelector('.inner');
+      var $list = document.querySelector('.list');
+      var pullLoading = new SimplePullLoading({
+        $outer: $outer,
+        $inner: $inner,
+        $list: $list,
+        type: 'down',
+        loadingFunc: function () {
+          setTimeout(function () {
+            pullLoading.showSuccess(); //加载完成
+          }, 2000)
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>

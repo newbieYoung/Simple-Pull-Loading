@@ -78,16 +78,12 @@
                 $outer: $outer,
                 $inner: $inner,
                 $list: $list,
-                tyle: 'down',
+                type: 'up',
                 loadingFunc: function () {
                     setTimeout(function () {
-                        pullLoading.showSuccess();
+                        pullLoading.showSuccess(); //加载完成
                     }, 2000)
                 }
-            })
-
-            $inner.addEventListener('scroll', function () {
-                console.log($inner.scrollTop);
             })
         }
     </script>
