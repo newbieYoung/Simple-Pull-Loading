@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>默认样式</title>
+  <meta name=viewport
+    content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">
+  <link rel="stylesheet" href="./reset.css">
+  <link rel="stylesheet" href="./pull-loading.css">
+  <style>
+    .demo {
+      position: relative;
+      height: 100px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="demo">
+    <div class="sim-pull-loading sim-tip">
+      <div class="pull-tip">下拉刷新</div>
+      <div class="pull-loading">正在加载</div>
+      <div class="pull-success">刷新成功</div>
+    </div>
+  </div>
+
+  <div class="demo">
+    <div class="sim-pull-loading sim-success">
+      <div class="pull-tip">下拉刷新</div>
+      <div class="pull-loading">正在加载</div>
+      <div class="pull-success">刷新成功</div>
+    </div>
+  </div>
+
+  <div class="demo">
+    <div class="sim-pull-loading sim-loading">
+      <div class="pull-tip">下拉刷新</div>
+      <div class="pull-loading">
+        <div class="lds-spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <p>正在加载</p>
+      </div>
+      <div class="pull-success">刷新成功</div>
+    </div>
+  </div>
+
+</body>
+
+</html>
