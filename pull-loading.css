@@ -8,6 +8,8 @@
     right: 0;
     font-size: 12px;
     color: #fff;
+    transition-property: all;
+    transition-timing-function: linear;
 }
 
 /* tip */
@@ -20,8 +22,13 @@
     display: none;
 }
 
+.sim-pull-loading.sim-loosen .pull-tip,
 .sim-pull-loading.sim-tip .pull-tip {
     display: flex;
+}
+
+.sim-pull-loading.sim-loosen .pull-tip:after {
+    content: '松开立即加载';
 }
 
 .sim-pull-loading .pull-tip:before {
@@ -35,6 +42,10 @@
     margin-right: 10px;
 }
 
+.sim-pull-loading .pull-tip:after {
+    content: '下拉刷新';
+}
+
 /* success */
 .sim-pull-loading .pull-success {
     width: 100%;
@@ -43,6 +54,8 @@
     align-items: center;
     justify-content: center;
     display: none;
+    transition-property: opacity;
+    transition-timing-function: linear;
 }
 
 .sim-pull-loading.sim-success .pull-success {

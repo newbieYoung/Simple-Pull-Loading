@@ -27,6 +27,8 @@
 
         .list {
             width: 100%;
+            transition-property: transform;
+            transition-timing-function: linear;
         }
 
         .list li {
@@ -76,7 +78,16 @@
                 $outer: $outer,
                 $inner: $inner,
                 $list: $list,
-                tyle: 'down'
+                tyle: 'down',
+                loadingFunc: function () {
+                    setTimeout(function () {
+                        pullLoading.showSuccess();
+                    }, 2000)
+                }
+            })
+
+            $inner.addEventListener('scroll', function () {
+                console.log($inner.scrollTop);
             })
         }
     </script>
