@@ -124,6 +124,7 @@
     self.$list.addEventListener('touchmove', function (e) {
       var point = e.touches[0];
       if (!self._isLoading && ((self.type == 'down' && self.atTop() && point.clientY > touchStart.y) || (self.type == 'up' && self.atBottom() && point.clientY < touchStart.y))) {
+        e.preventDefault();
         if (!movePoint) {
           movePoint = {
             x: point.clintX,
