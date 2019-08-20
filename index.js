@@ -236,12 +236,13 @@
   //显示成功
   SimplePullLoading.prototype.showSuccess = function () {
     var self = this;
-    self.$pull.classList.remove(this._loosenClass)
-    self.$pull.classList.remove(this._tipClass)
-    self.$pull.classList.remove(this._loadingClass)
-    self.$pull.classList.add(this._successClass)
+    self.$pull.classList.remove(self._loosenClass)
+    self.$pull.classList.remove(self._tipClass)
+    self.$pull.classList.remove(self._loadingClass)
+    self.$pull.classList.add(self._successClass)
 
     setTimeout(function () {
+      self.$pull.classList.remove(self._successClass);
       self.$pull.style[transitionDurationPro] = self.resultDuration + 's';
       self.$list.style[transitionDurationPro] = self.resultDuration + 's';
       self._moveY = 0;
